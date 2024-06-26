@@ -1,3 +1,18 @@
+=============
+LB4OMP-custom
+=============
+This is a customized version of `LB4OMP <https://github.com/unibas-dmi-hpc/LB4OMP>`_, intended for use with `AutoPas <https://github.com/AutoPas/AutoPas>`_.
+
+
+**Modifications:**
+
+
+- **kmp_runtime.cpp:** In ``__kmp_set_schedule()``, the index that maps the scheduling kind was decremented, as indexes in ``__kmp_sch_map[]`` start with 0. The chunk size is also passed along ``auto`` if it selects an Auto4OMP method. The kmp schedule setter, wrapped by ``ompc_set_schedule()``, now sets the correct extended schedule.
+- **omp.h.var:** The standard enum ``omp_sched_t`` was extended to include LB4OMP's scheduling techniques. This allows passing LB4OMP's extentions to ``ompc_set_schedule()``.
+- **kmp_settings.cpp:** Certain LB4OMP functions were moved into the OpenMP 5 condition. They were undefined for OpenMP <5, resulting in build.
+- **kmp_dispatch.cpp:** Adjustments to the membership function conditions to address build warnings about missing returns.
+
+
 ======
 LB4OMP
 ======
