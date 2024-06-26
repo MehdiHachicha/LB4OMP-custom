@@ -537,7 +537,7 @@ double DlbISDegraded(double deltaLB)
      {
          return 0.33*deltaLB;
      }
-     else if ((deltaLB <= 0))
+     else // AutoPas: removed always-true condition (deltaLB <= 0) to suppress no return warnings.
      {
         return 0;
      }
@@ -556,7 +556,7 @@ double DlbISImproved(double deltaLB)
      {
          return -0.33*deltaLB ;
      }
-     else if ((deltaLB >= 0))
+     else // AutoPas: removed always-true condition (deltaLB >= 0) to suppress no return warnings.
      {
         return 0;
      }
@@ -567,11 +567,7 @@ double DlbISImproved(double deltaLB)
 double DlbISNoChange(double deltaLB)
 {
 
-     if ((deltaLB < -3) || (deltaLB > 3) )
-     {
-        return 0;
-     }
-     else if ((deltaLB >= -3) && (deltaLB <= -1.5))
+     if ((deltaLB >= -3) && (deltaLB <= -1.5))
      {
          return  0.66*deltaLB + 2;
      }
@@ -582,6 +578,10 @@ double DlbISNoChange(double deltaLB)
      else if ((deltaLB > 1.5) && (deltaLB <= 3 ))
      {
         return -0.66*deltaLB + 2;
+     }
+     else // AutoPas: removed always-true condition ((deltaLB < -3) || (deltaLB > 3)) to suppress no return warnings.
+     {
+       return 0;
      }
 }
 
@@ -605,11 +605,7 @@ double DlbISNoChange(double deltaLB)
 double DTparISNoChange(double DTpar)
 {
 
-     if ((DTpar < -1) || (DTpar > 1) )
-     {
-        return 0;
-     }
-     else if ((DTpar >= -1) && (DTpar <= -0.5))
+     if ((DTpar >= -1) && (DTpar <= -0.5))
      {
          return 2*DTpar + 2;
      }
@@ -620,6 +616,10 @@ double DTparISNoChange(double DTpar)
      else if ((DTpar > 0.5) && (DTpar < 1))
      {
         return -2*DTpar + 2;
+     }
+     else // AutoPas: removed always-true condition ((DTpar < -1) || (DTpar > 1)) to suppress no return warnings.
+     {
+       return 0;
      }
 }
 
@@ -634,7 +634,7 @@ double DTparISDegraded(double DTpar)
      {
          return 0.4*DTpar - 0.2;
      }
-     else if ((DTpar >= 3))
+     else // AutoPas: removed always-true condition (DTpar >= 3) to suppress no return warnings.
      {
         return 1;
      }
@@ -653,7 +653,7 @@ double DTparISImproved(double DTpar)
      {
          return -0.4*DTpar - 0.2;
      }
-     else if ((DTpar <= -3))
+     else // AutoPas: removed always-true condition (DTpar <= -3) to suppress no return warnings.
      {
         return 1;
      }
@@ -696,11 +696,7 @@ double TparISLong(double Tpar)
 double TparISMedium(double Tpar)
 {
 
-   if((Tpar < 0) || (Tpar > 10))
-   {
-     return 0;
-   }
-   else if((Tpar >= 0) && (Tpar < 0.1))
+   if((Tpar >= 0) && (Tpar < 0.1))
    {
       return 10*Tpar ;
    }
@@ -711,6 +707,10 @@ double TparISMedium(double Tpar)
    else if ((Tpar > 1) && (Tpar < 10))
    {
       return -0.11*Tpar + 1.11;
+   }
+   else // AutoPas: removed always-true condition ((Tpar < 0) || (Tpar > 10)) to suppress no return warnings.
+   {
+     return 0;
    }
 
 }
@@ -768,11 +768,7 @@ double LBISHigh(double LB)
 double LBISModerate(double LB)
 {
 
-   if((LB < 1) || (LB > 5))
-   {
-     return 0;
-   }
-   else if((LB >= 1) && (LB < 2))
+   if((LB >= 1) && (LB < 2))
    {
       return LB - 1;
    }
@@ -783,6 +779,10 @@ double LBISModerate(double LB)
    else if ((LB > 4) && (LB < 5))
    {
       return -1*LB + 5;
+   }
+   else // AutoPas: removed always-true condition ((LB < 1) || (LB > 5)) to suppress no return warnings.
+   {
+     return 0;
    }
 
 }
@@ -2452,7 +2452,8 @@ break;
             std::vector<double> sET(nproc, 0.0);
             std::vector<double> w;
             //check initial weights
-            if (__kmp_env_weights.size() == nproc)
+            // AutoPas: converted nproc to an unsigned type to suppress sign comparison warnings.
+            if (__kmp_env_weights.size() == std::make_unsigned_t<T>(nproc))
             { w =  __kmp_env_weights;}
             else
             {
@@ -5136,7 +5137,9 @@ break;
 
        // last thread to enter
        int count = std::atomic_fetch_add(&AWFCounter,1);
-       if(count == (nproc - 1))
+
+       // AutoPas: converted nproc to an unsigned type to suppress sign comparison warnings.
+       if(std::make_unsigned_t<int>(count) == std::make_unsigned_t<T>((nproc - 1)))
        {
           AWFEnter   = 0; //reset flag
           AWFWait    = 1; //reset flag

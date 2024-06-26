@@ -2834,12 +2834,15 @@ void __kmp_set_schedule(int gtid, kmp_sched_t kind, int chunk) {
   } else {
     //    __kmp_sch_map[ kind - kmp_sched_lower_ext + kmp_sched_upper_std -
     //    kmp_sched_lower - 2 ];
+    // AutoPas: subtract 1, as indexes in __kmp_sch_map[] start at 0.
     thread->th.th_current_task->td_icvs.sched.r_sched_type =
         __kmp_sch_map[kind - kmp_sched_lower_ext + kmp_sched_upper_std -
-                      kmp_sched_lower - 2];
+                      kmp_sched_lower - 3];
   }
-  if (kind == kmp_sched_auto || chunk < 1) {
-    // ignore parameter chunk for schedule auto
+
+  // AutoPas: pass the chunk size if it selects an Auto4OMP method.
+  if ((kind == kmp_sched_auto && (chunk < 2 || chunk > 5)) || chunk < 1) {
+    // ignore parameter chunk
     thread->th.th_current_task->td_icvs.sched.chunk = KMP_DEFAULT_CHUNK;
   } else {
     thread->th.th_current_task->td_icvs.sched.chunk = chunk;
